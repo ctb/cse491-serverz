@@ -1,3 +1,5 @@
+# @comment   I Reviewed this, it works it both Firefox and Chrome. Good work!
+
 #!/usr/bin/env python
 import random
 import socket
