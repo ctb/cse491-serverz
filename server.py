@@ -20,9 +20,11 @@ while True:
     print c.recv(1000)
     print 'Got connection from', client_host, client_port
     c.send('HTTP/1.0 200 OK\n')
+    # @comment             ^^  I think this needs to be \r\n
+    # right now it doesn't work in chrome for me.
     c.send('Date: ' + time.asctime(time.gmtime()) + '\n')
     c.send('Content-Type: text/html\n\n')
     c.send('<html><body>')
+    c.send('<h1>Hello, world</h1> this is romanda1\'s Web server.')
     c.send("<h1>Hello, world</h1> this is romanda1's Web server.")
     c.send('</body></html>')
-    c.close()
