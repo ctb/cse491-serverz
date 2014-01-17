@@ -5,12 +5,15 @@ import time
 
 
 def handle_connection(conn):
+
     print conn.recv(1000)
-    print 'Got connection from', client_host, client_port
     conn.send('HTTP/1.0 200 OK\r\n')
-    conn.send('Content-Type: text/html\r\n\r\n')
-    conn.send("<h1>Hello, world</h1> this is brtaylor92's Web server\r\n")
+    conn.send('Content-type: text/html\r\n\r\n')
+    conn.send('<h1>Hello, world.</h1>')
+    #conn.send("This is brtaylor92's Web server")
+    conn.send("This is ctb's Web server.")
     conn.close()
+    return 'Got: %s' % (repr(conn.sent),)
 
 def main():
     s = socket.socket()         # Create a socket object
@@ -27,7 +30,8 @@ def main():
     while True:
         # Establish connection with client.    
         c, (client_host, client_port) = s.accept()
-        handle_connection(c)
+        print 'Got connection from', client_host, client_port
+        
 
 #boilerplate
 if __name__ == "__main__":
