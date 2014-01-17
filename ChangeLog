@@ -2,7 +2,5 @@
 
  * Initialized repository, created server.py and README.
 
-2014-01-14 Cameron Keif
+2014-01-14 Cameron Keif <keifcame@arctic.cse.msu.edu>
  * Return HTTP response to client
-
-# @comment Your log entry does not follow the standard format!!!!!!
