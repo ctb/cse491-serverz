@@ -5,3 +5,8 @@
 2014-01-09	Ben Taylor	<taylo886@arctic.cse.msu.edu>
 	
 	*	Updated server.py to respond with 200 OK, send "Hello World" html
+
+2014-01-17  Ben Taylor  <taylo886@arctic.cse.msu.edu>
+	*	Updated server.py to respond to different URLs, post requests
+	*	Added a nose test script (POST tests not yet implemented)
+	*	Fixed server.py to pass nose tests
