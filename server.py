@@ -9,7 +9,10 @@ def handle_get(conn, path):
         conn.send('Content-type: text/html\r\n\r\n')
         conn.send('<html>\n\t<body>\n\t\t')
         conn.send('<h1>Hello, world.</h1>\n\t\t')
-        conn.send("This is brtaylor92's Web server.\n\t")
+        conn.send("This is brtaylor92's Web server.<br />\n\t\t")
+        conn.send("<a href='/content'>Content</a><br />\n\t\t")
+        conn.send("<a href='/file'>Files</a><br />\n\t\t")
+        conn.send("<a href='/image'>Images</a><br />\n\t")
     elif path == '/content':
         conn.send('HTTP/1.0 200 OK\r\n')
         conn.send('Content-type: text/html\r\n\r\n')
