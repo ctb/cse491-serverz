@@ -40,16 +40,12 @@ def handle_get(conn, path):
     conn.send('</body>\n</html>')
 
 def handle_post(conn):
-    conn.send('HTTP/1.0 200 OK\r\n')
-    conn.send('Content-type: text/html\r\n\r\n')
-    conn.send('<html>\n\t<body>\n\t\t')
-    conn.send('<h1>Hello World!</h1>\n\t\t')
-    conn.send('This is a POST page.\n\t')
-    conn.send('</body>\n</html>')
+    conn.send('HTTP/1.0 200 OK\r\n\r\n')
+    conn.send('Hello World')
 
 def handle_connection(conn):
     req = conn.recv(1000)
-    check = req.split('\r\n')[0]
+    check = req.split('\r\n')[0].split(' ')[0]
     if check == 'GET':
         try:
             path = req.split('\r\n')[0].split(' ')[1]

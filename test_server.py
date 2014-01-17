@@ -82,3 +82,8 @@ def test_handle_connection_image():
     server.handle_connection(conn)
 
     assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
+
+def test_post():
+    conn = FakeConnection("POST / HTTP/1.1\r\n\r\n")
+    expected_return = '200\r\n' + \
+                      'Hello World'
