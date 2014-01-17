@@ -22,12 +22,19 @@ def main():
         handle_connection(c)
 
 def handle_connection(c):
-    c.send('HTTP/1.0 200 OK\r\n')
-    c.send('Content-type: text/html\r\n')
-    c.send('\r\n')
-    c.send('<h1>Hello, world.</h1>')
-    c.send('This is ctb\'s Web server.')
-    c.close()
+    request = c.recv(1000)
+
+    if request.startswith('POST'):
+        c.send('HTTP/1.0 200 OK\r\n\r\nhello, world\n')
+        c.close()
+        return
+    else:                               # a GET, assume
+        c.send('HTTP/1.0 200 OK\r\n')
+        c.send('Content-type: text/html\r\n')
+        c.send('\r\n')
+        c.send('<h1>Hello, world.</h1>')
+        c.send('This is ctb\'s Web server.')
+        c.close()
 
 if __name__ == '__main__':
     main()
