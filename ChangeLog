@@ -8,5 +8,5 @@
 
 2014-01-17  Ben Taylor  <taylo886@arctic.cse.msu.edu>
 	*	Updated server.py to respond to different URLs, post requests
-	*	Added a nose test script (POST tests not yet implemented)
+	*	Added a nose test script
 	*	Fixed server.py to pass nose tests
