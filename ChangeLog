@@ -1,3 +1,7 @@
+2014-01-20 Maxwell BRown
+
+* Changed string into variable passes
+
 2014-01-09 Maxwell Brown 
 
 * Added HTTP 1.0 response, Hello World to server.py
