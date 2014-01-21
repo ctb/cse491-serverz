@@ -1,3 +1,14 @@
+2014-01-20 Maxwell Brown
+
+* Cloned from hw1
+* Added main() and handle_connection(conn)
+* Added CTRL+C error handler (because it was bothering me)
+* Changed test_server.py from ctb to MaxwellGBrown
+* Fixed server.py from string errors
+* Added handlers for /, /content, /file, and /image
+* Made seperate handlers for GET and POST
+* Modified test_server.py to test all 4 GET and POST
+
 2014-01-20 Maxwell BRown
 
 * Changed string into variable passes
