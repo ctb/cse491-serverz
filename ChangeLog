@@ -1,4 +1,4 @@
-2014-01-20 Maxwell Brown
+2014-01-20  Maxwell Brown
 
 * Cloned from hw1
 * Added main() and handle_connection(conn)
@@ -9,11 +9,11 @@
 * Made seperate handlers for GET and POST
 * Modified test_server.py to test all 4 GET and POST
 
-2014-01-20 Maxwell BRown
+2014-01-20  Maxwell BRown
 
 * Changed string into variable passes
 
-2014-01-09 Maxwell Brown 
+2014-01-09  Maxwell Brown 
 
 * Added HTTP 1.0 response, Hello World to server.py
 * Added print c.recv(1000) to server.py
