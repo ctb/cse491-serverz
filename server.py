@@ -24,12 +24,38 @@ def main():
         handle_connection(c)
 
 def handle_connection(conn):
-    print conn.recv(1000)
-    conn.send('HTTP/1.0 200 OK\r\n' + \
-              'Content-type: text/html\r\n' + \
-              '\r\n' + \
-              '<h1>Hello, world.</h1>' + \
-              'This is keifcame\'s Web server.')
+    request = conn.recv(1000)
+
+    # Path is the second element in the first line of the request
+    # separated by whitespace. (Between GET and HTTP/1.1)
+    path = request.split('\r\n')[0].split(' ')[1]
+
+    if path == '/':
+        conn.send('HTTP/1.0 200 OK\r\n' + \
+                  'Content-type: text/html\r\n' + \
+                  '\r\n' + \
+                  '<h1>Links to other pages</h1>' + \
+                  '<a href = /content>Content</a><br>' + \
+                  '<a href = /file>File</a><br>' + \
+                  '<a href = /image>Image</a>')
+    elif path == '/content':
+        conn.send('HTTP/1.0 200 OK\r\n' + \
+                  'Content-type: text/html\r\n' + \
+                  '\r\n' + \
+                  '<h1>Cam is great</h1>' + \
+                  'This is some content.')
+    elif path == '/file':
+        conn.send('HTTP/1.0 200 OK\r\n' + \
+                  'Content-type: text/html\r\n' + \
+                  '\r\n' + \
+                  '<h1>They don\'t think it be like it is, but it do.</h1>' + \
+                  'This some file.')
+    elif path == '/image':
+        conn.send('HTTP/1.0 200 OK\r\n' + \
+                  'Content-type: text/html\r\n' + \
+                  '\r\n' + \
+                  '<h1>Wow. Such page. Very HTTP response</h1>' + \
+                  'This is some image.')
     conn.close()
 
 if __name__ == '__main__':
