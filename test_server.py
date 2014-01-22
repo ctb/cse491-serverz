@@ -25,7 +25,7 @@ class FakeConnection(object):
     def close(self):
         self.is_closed = True
 
-# Test a basic GET call.
+# Test basic GET calls.
 
 # Test path = /
 def test_handle_connection():
