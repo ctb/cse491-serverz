@@ -25,10 +25,11 @@ def main():
 
 def handle_connection(conn):
     print conn.recv(1000)
-    conn.send("HTTP/1.0 200 OK\r\n" + 
-           "Content-Type: text/html\r\n\r\n" + 
-           
-           "<h1>Hello, world</h1> this is keifcame's Web server.")
+    conn.send('HTTP/1.0 200 OK\r\n' + \
+              'Content-type: text/html\r\n' + \
+              '\r\n' + \
+              '<h1>Hello, world.</h1>' + \
+              'This is keifcame\'s Web server.')
     conn.close()
 
 if __name__ == '__main__':
