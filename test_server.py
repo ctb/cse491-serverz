@@ -41,7 +41,8 @@ def test_handle_connection():
 
     server.handle_connection(conn)
 
-#    assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
+    assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
+
 
 def test_handle_connection_content():
     conn = FakeConnection("GET /content HTTP/1.0\r\n\r\n")
@@ -55,6 +56,7 @@ def test_handle_connection_content():
 
     assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
 
+
 def test_handle_connection_file():
     conn = FakeConnection("GET /file HTTP/1.0\r\n\r\n")
     expected_return = 'HTTP/1.0 200 OK\r\n' + \
@@ -67,6 +69,7 @@ def test_handle_connection_file():
 
     assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
 
+
 def test_handle_connection_image():
     conn = FakeConnection("GET /image HTTP/1.0\r\n\r\n")
     expected_return = 'HTTP/1.0 200 OK\r\n' + \
@@ -78,6 +81,7 @@ def test_handle_connection_image():
     server.handle_connection(conn)
 
     assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
+
 
 def test_handle_connection_post():
     conn = FakeConnection("POST / HTTP/1.0\r\n\r\n")
