@@ -1,7 +1,11 @@
-2014-01-16  Jourdan West
-
- * Added in simple HTTP response for HW 1.
-
 2014-01-07  Titus Brown  <t@Titus-MacBook-Air-2.local>
 
  * Initialized repository, created server.py and README.
+ * Added a return for an HTTP 1.0 response 200 OK
+ * Added a return for a 'Content-type' of text/html
+ * added a message header saying Hello World
+ * added a body containing the server owner's name
+ * added a function to handle connection
+ * added a main function to handle server connection
+ * added links for the content, file, and image page
+ * added support for POST requests
