@@ -5,3 +5,8 @@
 2014-01-13 Jun Gao
 
  * Add the hello world code to the server.py
+
+2014-01-23 Jun Gao
+ # Add return page for /content, /file, /image
+   Add test function for them
+   Add return page for post
