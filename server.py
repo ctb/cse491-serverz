@@ -36,6 +36,10 @@ def handle_connection(conn):
 
     ## handle request data
     request_data = conn.recv(1000)
+
+    # @CTB you could assign request_data.splitlines()[0].rsplit(' ') to a
+    # variable here, right?  Also it's generally more readable to break up
+    # complicated multistep operations across multiple lines :)
     request_type = request_data.splitlines()[0].rsplit(' ')[0] # prints the page requested (1st line, 1st word)
     page_request = request_data.splitlines()[0].rsplit(' ')[1] # prints the page requested (1st line, 2nd word)
 
@@ -45,6 +49,7 @@ def handle_connection(conn):
     html_text = str()
 
     ## set http_response
+    # @CTB note, 'incase' is not a word.
     ## don't send the http_response just yet, incase page doesn't exist
     http_response =  'HTTP/1.0 200 OK\r\n'
     content_type = 'Content-type: text/html\r\n'
