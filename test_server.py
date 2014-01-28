@@ -35,12 +35,14 @@ def test_handle_connection():
                       '\r\n' + \
                       '<h1>Hello World!</h1>' + \
                       'This is westjour\'s web server.' + \
-                      '<a href="/content">Content</a><br />' + \
+                      '<br><a href="/content">Content</a><br />' + \
                       '<a href="/content">File</a><br />' + \
                       '<a href="/content">Image</a><br />'
 
     server.handle_connection(conn)
 
+    print conn.sent
+    print expected_return
     assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
 
 
