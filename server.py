@@ -24,48 +24,64 @@ def main():
         handle_connection(c)
 
 def handle_connection(conn):
-    request = conn.recv(1000)
+  request = conn.recv(1000)
 
-    first_line_of_request_split = request.split('\r\n')[0].split(' ')
+  first_line_of_request_split = request.split('\r\n')[0].split(' ')
 
-    # Path is the second element in the first line of the request
-    # separated by whitespace. (Between GET and HTTP/1.1). GET/POST is first.
-    http_method = first_line_of_request_split[0]
-    path = first_line_of_request_split[1]
+  # Path is the second element in the first line of the request
+  # separated by whitespace. (Between GET and HTTP/1.1). GET/POST is first.
+  http_method = first_line_of_request_split[0]
+  path = first_line_of_request_split[1]
 
-    if http_method == 'POST':
-        conn.send('HTTP/1.0 200 OK\r\n' + \
-                      'Content-type: text/html\r\n' + \
-                      '\r\n' + \
-                      'Post? Post! Zomg!')
-    else:
-        if path == '/':
-            conn.send('HTTP/1.0 200 OK\r\n' + \
-                      'Content-type: text/html\r\n' + \
-                      '\r\n' + \
-                      '<h1>Links to other pages</h1>' + \
-                      '<a href = /content>Content</a><br>' + \
-                      '<a href = /file>File</a><br>' + \
-                      '<a href = /image>Image</a>')
-        elif path == '/content':
-            conn.send('HTTP/1.0 200 OK\r\n' + \
-                      'Content-type: text/html\r\n' + \
-                      '\r\n' + \
-                      '<h1>Cam is great</h1>' + \
-                      'This is some content.')
-        elif path == '/file':
-            conn.send('HTTP/1.0 200 OK\r\n' + \
-                      'Content-type: text/html\r\n' + \
-                      '\r\n' + \
-                      '<h1>They don\'t think it be like it is, but it do.</h1>' + \
-                      'This some file.')
-        elif path == '/image':
-            conn.send('HTTP/1.0 200 OK\r\n' + \
-                      'Content-type: text/html\r\n' + \
-                      '\r\n' + \
-                      '<h1>Wow. Such page. Very HTTP response</h1>' + \
-                      'This is some image.')
-        conn.close()
+  if http_method == 'POST':
+      conn.send('HTTP/1.0 200 OK\r\n' + \
+                    'Content-type: text/html\r\n' + \
+                    '\r\n' + \
+                    'Post? Post! Zomg!')
+  else:
+      if path == '/':
+          index(conn);
+      elif path == '/content':
+          content(conn);
+      elif path == '/file':
+          filepath(conn);
+      elif path == '/image':
+          image(conn);
+      conn.close()
+
+def index(conn):
+  ''' Handle a connection given path / '''
+  conn.send('HTTP/1.0 200 OK\r\n' + \
+            'Content-type: text/html\r\n' + \
+            '\r\n' + \
+            '<h1>Links to other pages</h1>' + \
+            '<a href = /content>Content</a><br>' + \
+            '<a href = /file>File</a><br>' + \
+            '<a href = /image>Image</a>')
+
+def content(conn):
+  ''' Handle a connection given path /content '''
+  conn.send('HTTP/1.0 200 OK\r\n' + \
+            'Content-type: text/html\r\n' + \
+            '\r\n' + \
+            '<h1>Cam is great</h1>' + \
+            'This is some content.')
+
+def filepath(conn):
+  ''' Handle a connection given path /file '''
+  conn.send('HTTP/1.0 200 OK\r\n' + \
+            'Content-type: text/html\r\n' + \
+            '\r\n' + \
+            '<h1>They don\'t think it be like it is, but it do.</h1>' + \
+            'This some file.')
+
+def image(conn):
+  ''' Handle a connection given path /image '''
+  conn.send('HTTP/1.0 200 OK\r\n' + \
+            'Content-type: text/html\r\n' + \
+            '\r\n' + \
+            '<h1>Wow. Such page. Very HTTP response</h1>' + \
+            'This is some image.')
 
 if __name__ == '__main__':
    main()
