@@ -32,6 +32,10 @@ def handle_connection(conn):
 	request = conn.recv(1000)
 	method = request.split('\n')[0].split(' ')[0]
 	path = request.split('\n')[0].split(' ')[1]
+
+        # @CTB Note here that you are sending "OK" response before
+        # understanding request -- if there's an error, you won't
+        # be able to send it. Not a problem now, but more later.
 	conn.send('HTTP/1.0 200 OK\r\n')
 	conn.send('Content-type: text/html\r\n')
 	conn.send('\r\n')
