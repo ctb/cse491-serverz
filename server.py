@@ -27,6 +27,16 @@ def handle_connection(conn):
    conn.send('HTTP/1.0 200 OK\r\n')
    conn.send('Content-type: text/html\r\n')
    conn.send('\r\n')
+
+   # @CTB comment: while it's technically OK to send part of the response
+   # before reading the request, you will run into problems down the road
+   # because you are telling the client that the request is OK ("200 OK")
+   # before actually looking at it!
+
+   # @CTB note that this is also a really bad way to parse the request;
+   # you really want to split up the header and the content first, and
+   # then parse the header separately from the content.  Here, you are
+   # modifying the content.
    request = (conn.recv(1000)).split()
 
    if len(request):
