@@ -31,7 +31,11 @@ def handle_connection(conn):
   # Path is the second element in the first line of the request
   # separated by whitespace. (Between GET and HTTP/1.1). GET/POST is first.
   http_method = first_line_of_request_split[0]
-  path = first_line_of_request_split[1]
+	
+  try:
+    path = first_line_of_request_split[1]
+  except:
+    path = "/404"
 
   if http_method == 'POST':
       conn.send('HTTP/1.0 200 OK\r\n' + \
@@ -40,13 +44,15 @@ def handle_connection(conn):
                     'Post? Post! Zomg!')
   else:
       if path == '/':
-          index(conn);
+          index(conn)
       elif path == '/content':
-          content(conn);
+          content(conn)
       elif path == '/file':
-          filepath(conn);
+          filepath(conn)
       elif path == '/image':
-          image(conn);
+          image(conn)
+      elif path == '/404':
+        notfound(conn)
       conn.close()
 
 def index(conn):
@@ -82,6 +88,9 @@ def image(conn):
             '\r\n' + \
             '<h1>Wow. Such page. Very HTTP response</h1>' + \
             'This is some image.')
+
+def notfound(conn):
+  pass
 
 if __name__ == '__main__':
    main()
