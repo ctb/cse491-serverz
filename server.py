@@ -4,6 +4,7 @@
 import random
 import socket
 import time
+import urlparse 
 
 def main():
     s = socket.socket()         # Create a socket object
@@ -25,6 +26,7 @@ def main():
 
 def handle_connection(conn):
   request = conn.recv(1000)
+  print request
 
   first_line_of_request_split = request.split('\r\n')[0].split(' ')
 
@@ -33,7 +35,8 @@ def handle_connection(conn):
   http_method = first_line_of_request_split[0]
 	
   try:
-    path = first_line_of_request_split[1]
+    parsed_url = urlparse.urlparse(first_line_of_request_split[1])
+    path = parsed_url[2]
   except:
     path = "/404"
 
@@ -52,7 +55,19 @@ def handle_connection(conn):
       elif path == '/image':
           handle_image(conn)
       elif path == '/submit':
-          handle_submit(conn)
+          # submit needs to know about the query field, so more
+          # work needs to be done here.
+
+          query = parsed_url[4]
+          
+          # each value is split by an &
+          query = query.split("&")
+
+          # format is name=value. We want the value.
+          firstname = query[0].split("=")[1]
+          lastname = query[1].split("=")[1]
+
+          handle_submit(conn,firstname,lastname)
       else:
           notfound(conn)
       conn.close()
@@ -68,12 +83,13 @@ def handle_index(conn):
             "<input type='submit' value='Submit'>\n\n" + \
             "</form>")
 
-def handle_submit(conn):
+def handle_submit(conn, firstname, lastname):
   ''' Handle a connection given path /submit '''
+  # Screw the patriarchy! Why's it gotta be "Mr."?!
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
             '\r\n' + \
-            "hi\n")
+            "Hello Mrs. %s %s." % (firstname, lastname))
 
 def handle_content(conn):
   ''' Handle a connection given path /content '''
