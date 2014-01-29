@@ -47,32 +47,20 @@ def handle_connection(conn):
                     'Post? Post! Zomg!')
   else:
       if path == '/':
-          handle_index(conn)
+          handle_index(conn,parsed_url)
       elif path == '/content':
-          handle_content(conn)
+          handle_content(conn,parsed_url)
       elif path == '/file':
-          handle_filepath(conn)
+          handle_filepath(conn,parsed_url)
       elif path == '/image':
-          handle_image(conn)
+          handle_image(conn,parsed_url)
       elif path == '/submit':
-          # submit needs to know about the query field, so more
-          # work needs to be done here.
-
-          query = parsed_url[4]
-          
-          # each value is split by an &
-          query = query.split("&")
-
-          # format is name=value. We want the value.
-          firstname = query[0].split("=")[1]
-          lastname = query[1].split("=")[1]
-
-          handle_submit(conn,firstname,lastname)
+          handle_submit(conn,parsed_url)
       else:
-          notfound(conn)
+          notfound(conn,parsed_url)
       conn.close()
 
-def handle_index(conn):
+def handle_index(conn, parsed_url):
   ''' Handle a connection given path / '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -83,15 +71,27 @@ def handle_index(conn):
             "<input type='submit' value='Submit'>\n\n" + \
             "</form>")
 
-def handle_submit(conn, firstname, lastname):
-  ''' Handle a connection given path /submit '''
-  # Screw the patriarchy! Why's it gotta be "Mr."?!
-  conn.send('HTTP/1.0 200 OK\r\n' + \
-            'Content-type: text/html\r\n' + \
-            '\r\n' + \
-            "Hello Mrs. %s %s." % (firstname, lastname))
+def handle_submit(conn, parsed_url):
+    ''' Handle a connection given path /submit '''
+    # submit needs to know about the query field, so more
+    # work needs to be done here.
 
-def handle_content(conn):
+    query = parsed_url[4]
+    
+    # each value is split by an &
+    query = query.split("&")
+
+    # format is name=value. We want the value.
+    firstname = query[0].split("=")[1]
+    lastname = query[1].split("=")[1]
+
+    # Screw the patriarchy! Why's it gotta be "Mr."?!
+    conn.send('HTTP/1.0 200 OK\r\n' + \
+              'Content-type: text/html\r\n' + \
+              '\r\n' + \
+              "Hello Mrs. %s %s." % (firstname, lastname))
+
+def handle_content(conn, parsed_url):
   ''' Handle a connection given path /content '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -99,7 +99,7 @@ def handle_content(conn):
             '<h1>Cam is great</h1>' + \
             'This is some content.')
 
-def handle_filepath(conn):
+def handle_filepath(conn, parsed_url):
   ''' Handle a connection given path /file '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -107,7 +107,7 @@ def handle_filepath(conn):
             '<h1>They don\'t think it be like it is, but it do.</h1>' + \
             'This some file.')
 
-def handle_image(conn):
+def handle_image(conn, parsed_url):
   ''' Handle a connection given path /image '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -115,7 +115,7 @@ def handle_image(conn):
             '<h1>Wow. Such page. Very HTTP response</h1>' + \
             'This is some image.')
 
-def notfound(conn):
+def notfound(conn, parsed_url):
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
             '\r\n' + \
