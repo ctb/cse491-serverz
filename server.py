@@ -44,18 +44,20 @@ def handle_connection(conn):
                     'Post? Post! Zomg!')
   else:
       if path == '/':
-          index(conn)
+          handle_index(conn)
       elif path == '/content':
-          content(conn)
+          handle_content(conn)
       elif path == '/file':
-          filepath(conn)
+          handle_filepath(conn)
       elif path == '/image':
-          image(conn)
-      elif path == '/404':
-        notfound(conn)
+          handle_image(conn)
+      elif path == '/submit':
+          handle_submit(conn)
+      else:
+          notfound(conn)
       conn.close()
 
-def index(conn):
+def handle_index(conn):
   ''' Handle a connection given path / '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -66,7 +68,14 @@ def index(conn):
             "<input type='submit' value='Submit'>\n\n" + \
             "</form>")
 
-def content(conn):
+def handle_submit(conn):
+  ''' Handle a connection given path /submit '''
+  conn.send('HTTP/1.0 200 OK\r\n' + \
+            'Content-type: text/html\r\n' + \
+            '\r\n' + \
+            "hi\n")
+
+def handle_content(conn):
   ''' Handle a connection given path /content '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -74,7 +83,7 @@ def content(conn):
             '<h1>Cam is great</h1>' + \
             'This is some content.')
 
-def filepath(conn):
+def handle_filepath(conn):
   ''' Handle a connection given path /file '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -82,7 +91,7 @@ def filepath(conn):
             '<h1>They don\'t think it be like it is, but it do.</h1>' + \
             'This some file.')
 
-def image(conn):
+def handle_image(conn):
   ''' Handle a connection given path /image '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -91,7 +100,10 @@ def image(conn):
             'This is some image.')
 
 def notfound(conn):
-  pass
+  conn.send('HTTP/1.0 200 OK\r\n' + \
+            'Content-type: text/html\r\n' + \
+            '\r\n' + \
+            'Oopsies, this isn\'t the page you want. :(')
 
 if __name__ == '__main__':
    main()
