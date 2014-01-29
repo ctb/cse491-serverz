@@ -33,10 +33,11 @@ def test_handle_connection():
     expected_return = 'HTTP/1.0 200 OK\r\n' + \
                       'Content-type: text/html\r\n' + \
                       '\r\n' + \
-                      '<h1>Links to other pages</h1>' + \
-                      '<a href = /content>Content</a><br>' + \
-                      '<a href = /file>File</a><br>' + \
-                      '<a href = /image>Image</a>'
+                      "<form action='/submit' method='GET'>\n" + \
+                      "<p>first name: <input type='text' name='firstname'></p>\n" + \
+                      "<p>last name: <input type='text' name='lastname'></p>\n" + \
+                      "<input type='submit' value='Submit'>\n\n" + \
+                      "</form>"
 
     server.handle_connection(conn)
 
