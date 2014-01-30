@@ -1,5 +1,5 @@
 import server
-import urlparse
+
 class FakeConnection(object):
     """
     A fake connection class that mimics a real TCP socket for the purpose
