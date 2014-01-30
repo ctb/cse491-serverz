@@ -9,3 +9,6 @@
  * Added test_server.py for automated testing.
  * Return different responses for /, /content, /file, and /image paths.
  * Differentiate between GET and POST requests.
+
+2014-01-29
+ * Added support for HTML forms, using both GET and POST.
