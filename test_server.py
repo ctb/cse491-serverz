@@ -37,7 +37,11 @@ def test_handle_connection():
                       "There is a list of 'website' available.<br>" + \
                       '<a href= /content>Content</a><br>' + \
                       '<a href= /file>File</a><br>' + \
-                      '<a href= /image>Image</a><br>'
+                      '<a href= /image>Image</a><br>' + \
+                      "<form action='/submit' method='GET'>" + \
+                      "<input type='text' name='firstname'>" + \
+                      "<input type='text' name='lastname'>" + \
+                      "<input type='submit' value='Submit'></form>"
 
     server.handle_connection(conn)
 
@@ -48,7 +52,7 @@ def test_handle_connection_file():
     expected_return = 'HTTP/1.0 200 OK\r\n' + \
                       'Content-type: text/html\r\n' + \
                       '\r\n' + \
-                      'There will be some files in future.'
+                      'This is the file you want to see.'
     server.handle_connection(conn)
 
     assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
@@ -68,7 +72,7 @@ def test_handle_connection_image():
     expected_return = 'HTTP/1.0 200 OK\r\n' + \
                       'Content-type: text/html\r\n' + \
                       '\r\n' + \
-                      'Only most smart guy could see the image. LOL' 
+                      'This is the image you want to see.' 
     server.handle_connection(conn)
 
     assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
@@ -85,3 +89,16 @@ def test_handle_connection_post():
     assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
 
 
+def test_handle_connection_postsubmit():
+    conn = FakeConnection("POST /subimit?firstname=jun&lastname=gao HTTP/1.0\r\n\r\n")
+    expected_return = 'HTTP/1.0 200 OK\r\n' + \
+                      'Content-type: text/html\r\n' + \
+                      '\r\n' + \
+                      'Hello Mr. jun gao'
+
+def test_handle_connection_getsubmit():
+    conn = FakeConnection("GET /subimit?firstname=jun&lastname=gao HTTP/1.0\r\n\r\n")
+    expected_return = 'HTTP/1.0 200 OK\r\n' + \
+                      'Content-type: text/html\r\n' + \
+                      '\r\n' + \
+                      'Hello Mr. jun gao'

@@ -45,7 +45,6 @@ def handle_connection(conn):
                 handle_submit(para,conn)
             else:
                 conn.send('<h1>Hello, world.</h1>')
-                conn.sned('')
         elif method == 'GET':
             if req == '/':
                 handle_deafult(conn)

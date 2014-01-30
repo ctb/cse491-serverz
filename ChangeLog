@@ -10,3 +10,6 @@
  # Add return page for /content, /file, /image
    Add test function for them
    Add return page for post
+2014-01-30 Jun Gao
+ * Add the submit command
+ * function refactor
