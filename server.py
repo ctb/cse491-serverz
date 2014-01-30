@@ -48,25 +48,36 @@ def handle_connection(conn):
                 conn.sned('')
         elif method == 'GET':
             if req == '/':
-                conn.send("<h1>Hello, world.</h1>")
-                conn.send("This is fakestuff's Web server.")
-                conn.send("There is a list of 'website' available.<br>")
-                conn.send('<a href= /content>Content</a><br>')
-                conn.send('<a href= /file>File</a><br>')
-                conn.send('<a href= /image>Image</a><br>')
-                conn.send("<form action='/submit' method='GET'>")
-                conn.send("<input type='text' name='firstname'>")
-                conn.send("<input type='text' name='lastname'>")
-                conn.send("<input type='submit' value='Submit'></form>")
+                handle_deafult(conn)
             if req == '/content':
-                conn.send("This is the content you want to see.")
+                handle_content(conn)
             if req == '/file':
-                conn.send("There will be some files in future.")
+                handle_file(conn)
             if req == '/image':
-                conn.send("Only most smart guy could see the image. LOL")
+                handle_image(conn)
             if req == '/submit':
                 handle_submit(receive,conn)
         conn.close()
+
+def handle_deafult(conn):
+    conn.send("<h1>Hello, world.</h1>")
+    conn.send("This is fakestuff's Web server.")
+    conn.send("There is a list of 'website' available.<br>")
+    conn.send('<a href= /content>Content</a><br>')
+    conn.send('<a href= /file>File</a><br>')
+    conn.send('<a href= /image>Image</a><br>')
+    conn.send("<form action='/submit' method='GET'>")
+    conn.send("<input type='text' name='firstname'>")
+    conn.send("<input type='text' name='lastname'>")
+    conn.send("<input type='submit' value='Submit'></form>")
+def handle_content(conn):
+    conn.send("This is the content you want to see.")
+
+def handle_file(conn):
+    conn.send("This is the file you want to see.")
+
+def handle_image(conn):
+    conn.send("This is the image you want to see.")
 
 if __name__ == '__main__':
     main()
