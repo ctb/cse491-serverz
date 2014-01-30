@@ -41,49 +41,58 @@ def handle_connection(conn):
     path = "/404"
 
   if http_method == 'POST':
-      conn.send('HTTP/1.0 200 OK\r\n' + \
-                    'Content-type: text/html\r\n' + \
-                    '\r\n' + \
-                    'Post? Post! Zomg!')
+    if path == '/':
+      handle_index(conn, '')
+    elif path == '/submit':
+        # POST has the submitted params at the end of the content body
+        handle_submit(conn,request.split('\r\n')[-1])
   else:
+      # Most of these are taking in empty strings. The assignment
+      # said to try to keep all the params the same for the future, so I did.
       if path == '/':
-          handle_index(conn,parsed_url)
+          handle_index(conn,'')
       elif path == '/content':
-          handle_content(conn,parsed_url)
+          handle_content(conn,'')
       elif path == '/file':
-          handle_filepath(conn,parsed_url)
+          handle_filepath(conn,'')
       elif path == '/image':
-          handle_image(conn,parsed_url)
+          handle_image(conn,'')
       elif path == '/submit':
-          handle_submit(conn,parsed_url)
+          # GET has the params in the URL.
+          handle_submit(conn,parsed_url[4])
       else:
-          notfound(conn,parsed_url)
+          notfound(conn,'')
       conn.close()
 
-def handle_index(conn, parsed_url):
+def handle_index(conn, params):
   ''' Handle a connection given path / '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
             '\r\n' + \
+            "<p><u>Form Submission via GET</u></p>"
             "<form action='/submit' method='GET'>\n" + \
             "<p>first name: <input type='text' name='firstname'></p>\n" + \
             "<p>last name: <input type='text' name='lastname'></p>\n" + \
-            "<input type='submit' value='Submit'>\n\n" + \
-            "</form>")
+            "<p><input type='submit' value='Submit'>\n\n" + \
+            "</form></p>" + \
+            "<p><u>Form Submission via POST</u></p>"
+            "<form action='/submit' method='POST'>\n" + \
+            "<p>first name: <input type='text' name='firstname'></p>\n" + \
+            "<p>last name: <input type='text' name='lastname'></p>\n" + \
+            "<p><input type='submit' value='Submit'>\n\n" + \
+            "</form></p>")
 
-def handle_submit(conn, parsed_url):
+def handle_submit(conn, params):
     ''' Handle a connection given path /submit '''
     # submit needs to know about the query field, so more
     # work needs to be done here.
 
-    query = parsed_url[4]
-    
     # each value is split by an &
-    query = query.split("&")
+    params = params.split("&")
 
     # format is name=value. We want the value.
-    firstname = query[0].split("=")[1]
-    lastname = query[1].split("=")[1]
+    firstname = params[0].split("=")[1]
+    lastname = params[1].split("=")[1]
 
     # Screw the patriarchy! Why's it gotta be "Mr."?!
     conn.send('HTTP/1.0 200 OK\r\n' + \
@@ -91,7 +100,7 @@ def handle_submit(conn, parsed_url):
               '\r\n' + \
               "Hello Mrs. %s %s." % (firstname, lastname))
 
-def handle_content(conn, parsed_url):
+def handle_content(conn, params):
   ''' Handle a connection given path /content '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -99,7 +108,7 @@ def handle_content(conn, parsed_url):
             '<h1>Cam is great</h1>' + \
             'This is some content.')
 
-def handle_filepath(conn, parsed_url):
+def handle_filepath(conn, params):
   ''' Handle a connection given path /file '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -107,7 +116,7 @@ def handle_filepath(conn, parsed_url):
             '<h1>They don\'t think it be like it is, but it do.</h1>' + \
             'This some file.')
 
-def handle_image(conn, parsed_url):
+def handle_image(conn, params):
   ''' Handle a connection given path /image '''
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
@@ -115,7 +124,7 @@ def handle_image(conn, parsed_url):
             '<h1>Wow. Such page. Very HTTP response</h1>' + \
             'This is some image.')
 
-def notfound(conn, parsed_url):
+def notfound(conn, params):
   conn.send('HTTP/1.0 200 OK\r\n' + \
             'Content-type: text/html\r\n' + \
             '\r\n' + \
