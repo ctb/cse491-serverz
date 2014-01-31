@@ -21,6 +21,8 @@ def main():
         #Establish connection with client.
        # url = host + ':' +str(port)
         handle_connection(c)
+
+# @CTB -- please space out your code better!
 def handle_submit(para,conn):
     path = para.split('\r\n')[0].split(' ')[1]
     print path
@@ -31,23 +33,30 @@ def handle_submit(para,conn):
     conn.send('Hello Mr. %s %s' % (first_name, last_name))
 
 def handle_connection(conn):
+        # @CTB please indent consistently. You can usually set your
+        # editor to do this for you...
         receive = conn.recv(1000)
-        print receive       
+        print receive                   # @CTB bad idea to leave prints here
+        # @CTB print statements for debugging should be in test code.
         command = receive.split('\r\n')[0].split(' ')[0:2]
         method = command[0]
         req = command[1].split('?')[0]
         print req
+
+        # @CTB you will eventually want to leave this 'til after you
+        # have processed the request, but OK for now.
         conn.send('HTTP/1.0 200 OK\r\n')
         conn.send('Content-type: text/html\r\n')
         conn.send('\r\n')
+        
         if method == 'POST':
             if req == '/submit':
-                handle_submit(para,conn)
+                handle_submit(receive,conn) # @CTB this code is broken!!
             else:
                 conn.send('<h1>Hello, world.</h1>')
         elif method == 'GET':
             if req == '/':
-                handle_deafult(conn)
+                handle_default(conn)    # @CTB spelling...
             if req == '/content':
                 handle_content(conn)
             if req == '/file':
@@ -58,7 +67,7 @@ def handle_connection(conn):
                 handle_submit(receive,conn)
         conn.close()
 
-def handle_deafult(conn):
+def handle_default(conn):
     conn.send("<h1>Hello, world.</h1>")
     conn.send("This is fakestuff's Web server.")
     conn.send("There is a list of 'website' available.<br>")
@@ -69,6 +78,8 @@ def handle_deafult(conn):
     conn.send("<input type='text' name='firstname'>")
     conn.send("<input type='text' name='lastname'>")
     conn.send("<input type='submit' value='Submit'></form>")
+
+# @CTB good separation of pages into different functions!
 def handle_content(conn):
     conn.send("This is the content you want to see.")
 

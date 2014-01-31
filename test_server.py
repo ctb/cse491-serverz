@@ -90,15 +90,23 @@ def test_handle_connection_post():
 
 
 def test_handle_connection_postsubmit():
-    conn = FakeConnection("POST /subimit?firstname=jun&lastname=gao HTTP/1.0\r\n\r\n")
+    conn = FakeConnection("POST /submit?firstname=jun&lastname=gao HTTP/1.0\r\n\r\n")
     expected_return = 'HTTP/1.0 200 OK\r\n' + \
                       'Content-type: text/html\r\n' + \
                       '\r\n' + \
                       'Hello Mr. jun gao'
+    
+    server.handle_connection(conn)
+
+    assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
 
 def test_handle_connection_getsubmit():
-    conn = FakeConnection("GET /subimit?firstname=jun&lastname=gao HTTP/1.0\r\n\r\n")
+    conn = FakeConnection("GET /submit?firstname=jun&lastname=gao HTTP/1.0\r\n\r\n")
     expected_return = 'HTTP/1.0 200 OK\r\n' + \
                       'Content-type: text/html\r\n' + \
                       '\r\n' + \
                       'Hello Mr. jun gao'
+    
+    server.handle_connection(conn)
+
+    assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
