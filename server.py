@@ -3,9 +3,12 @@ import random
 import socket
 import time
 
-def main():
-    s = socket.socket()         # Create a socket object
-    host = socket.getfqdn() # Get local machine name
+def main(socketmodule=None):
+    if socketmodule is None:
+        socketmodule = socket
+        
+    s = socketmodule.socket()         # Create a socket object
+    host = socketmodule.getfqdn() # Get local machine name
     port = random.randint(8000, 9999)
     s.bind((host, port))        # Bind to the port
 
@@ -23,6 +26,10 @@ def main():
 
 def handle_connection(c):
     request = c.recv(1000)
+
+    if not request:
+        print 'error, remote client closed connection without sending anything'
+        return
 
     if request.startswith('POST'):
         c.send('HTTP/1.0 200 OK\r\n\r\nhello, world\n')
