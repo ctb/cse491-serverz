@@ -6,12 +6,15 @@ import jinja2
 from wsgiref.util import setup_testing_defaults
 
 def app(environ, start_response):
+    # @CTB: note, these can be moved to the top level of the module.
     loader = jinja2.FileSystemLoader('./templates')
     env = jinja2.Environment(loader=loader)
 
     # By default, set up the 404 page response. If it's
     # a valid page, we change this. If some weird stuff
     # happens, it'll default to 404.
+
+    # @CTB: nice, good default!
     status = '404 Not Found'
     response_content = not_found('', env)
     headers = [('Content-type', 'text/html')]
@@ -28,7 +31,7 @@ def app(environ, start_response):
             # than spamming status = '200 OK'. But it's almost 10
             # and we have to catch up because our capstone group
             # member just didn't do anything the past week. /rant
-            status = '200 OK'
+            status = '200 OK' # @CTB hah!
             response_content = handle_index(environ, env)
         elif path == '/submit':
             status = '200 OK'
@@ -49,6 +52,8 @@ def app(environ, start_response):
         elif path == '/submit':
             status = '200 OK'
             response_content = handle_submit_get(environ, env)
+
+    # re status 200 repetitiveness, I will show you some tricks shortly. @CTB
                 
     start_response(status, headers)
     return response_content
