@@ -6,7 +6,9 @@ from . import html, image
 
 #Username and Password Global Dictionary
 accounts = {}
-accounts["brandon"] = "yolo"
+accounts["user1"] = "user1"
+accounts["user2"] = "user2"
+
 current_user = '' 
 welcome_message = "No User Currently Logged In"
 comment_block = ''
@@ -88,9 +90,6 @@ class RootDirectory(Directory):
         print request.form.keys()
         user = request.form['username']
         pass_word = request.form['password']
-        if current_user != '':
-            login_message = "An account is already currently logged in"
-            return html.render("login.html", locals())
         if user == '' or pass_word == '':
             login_message = "Required Field is Blank"
             return html.render("login.html", locals())

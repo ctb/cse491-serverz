@@ -7,7 +7,6 @@ import StringIO
 import quixote
 import imageapp
 import argparse
-import quotes
 import chat
 
 from app import make_app
@@ -20,7 +19,7 @@ def main():
     host = socket.getfqdn() # Get local machine name.
 
     parser = argparse.ArgumentParser() #creating a parser 
-    parser.add_argument("-A", choices=['image', 'altdemo', 'myapp', 'quotes', 'chat'],
+    parser.add_argument("-A", choices=['image', 'altdemo', 'myapp', 'chat'],
             help='Choose which app you would like to run')
     parser.add_argument("-p", type=int, help="Choose the port you would like to run on.")
     args = parser.parse_args()
@@ -41,9 +40,6 @@ def main():
     elif args.A == "altdemo":
         p = create_publisher()
         wsgi_app = quixote.get_wsgi_app()
-    elif args.A == "quotes":
-        directory_path = './quotes/'
-        wsgi_app = quotes.create_quotes_app(directory_path + 'quotes.txt', directory_path + 'html')
     elif args.A == "chat":
         wsgi_app = chat.create_chat_app('./chat/html')
     else:
