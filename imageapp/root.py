@@ -25,6 +25,12 @@ class RootDirectory(Directory):
             welcome_message = "Welcome, " + current_user
         return html.render('index.html', globals())
 
+    @export(name='css')
+    def css(self):
+        response = quixote.get_response()
+        response.set_content_type('text/css')
+        return html.load_file('style.css')
+
     @export(name='upload')
     def upload(self):
         return html.render('upload.html')
