@@ -13,19 +13,34 @@ import time
 from urlparse import urlparse
 from wsgiref.validate import validator
 
-def handle_connection(server_port, conn, port, app):
-    request = conn.recv(1)
-    
-    if not request:
+def is_complete_request(buffer):
+    if '\r\n\r\n' not in buffer:
+        return False                    # we didn't get everything!
+
+    request, data = buffer.split('\r\n',1)
+    headers = {}
+    for line in data.split('\r\n')[:-2]:
+        k, v = line.split(': ', 1)
+        headers[k.lower()] = v
+
+    if request.startswith('POST '):
+        content_length = headers['content-length']
+        content_length = int(content_length)
+
+        if len(data) != content_length:
+            return False                # we didn't get everything!
+        
+    return True
+
+def handle_connection(server_port, buffer, app, conn):
+    print 'in handle connection', server_port
+    if not buffer:
         print 'Error, remote client closed connection without sending anything'
         return
 
     count = 0
     env = {}
-    while request[-4:] != '\r\n\r\n':
-         request += conn.recv(1)
-
-    request, data = request.split('\r\n',1)
+    request, data = buffer.split('\r\n',1)
     headers = {}
     for line in data.split('\r\n')[:-2]:
         k, v = line.split(': ', 1)
@@ -53,8 +68,6 @@ def handle_connection(server_port, conn, port, app):
         env['REQUEST_METHOD'] = 'POST'
         env['CONTENT_LENGTH'] = headers['content-length']
         env['CONTENT_TYPE'] = headers['content-type']
-        while len(body) < int(headers['content-length']):
-            body += conn.recv(1)
 
     def start_response(status, response_headers):
         conn.send('HTTP/1.0 ')
@@ -70,6 +83,8 @@ def handle_connection(server_port, conn, port, app):
     for data in result:
         conn.send(data)
     conn.close()
+
+    print 'done with handle connection'
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -90,6 +105,7 @@ def main():
     p = imageapp.create_publisher()
     wsgi_app = quixote.get_wsgi_app()
     s = socket.socket()
+    s.setblocking(0)
     host = socket.getfqdn()
     if port == 0:
         port = random.randint(8000, 9999)
@@ -99,10 +115,33 @@ def main():
     print 'The Web server URL for this would be http://%s:%d/' % (host, port)
     s.listen(5)
     print 'Entering infinite loop; hit CTRL-C to exit'
-    while True:
-        c, (client_host, client_port) = s.accept()
-        print 'Got connection from', client_host, client_port
-        handle_connection(port, c, client_port, wsgi_app)
+
+    active_sockets = []
+    while 1:
+        try:
+            print 'Looking for connection...'
+            c, (client_host, client_port) = s.accept()
+            print 'got connection!', client_host, client_port
+            c.setblocking(0)
+            active_sockets.append((c, ""))
+        except socket.error:
+            print 'No connection; continuing on our merry way!'
+
+        still_active_sockets = []
+        for c, buffer in active_sockets:
+            try:
+                data = c.recv(1024)
+            except socket.error:
+                # no data; go to next socket
+                continue
+
+            # got some data! process.
+            print 'data!', data
+            buffer += data
+            if is_complete_request(buffer):
+                handle_connection(port, buffer, wsgi_app, c)
+            else:
+                still_active_sockets.append((c, buffer))
 
 if __name__ == '__main__':
     main()
