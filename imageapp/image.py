@@ -1,8 +1,8 @@
 # image handling API
-import cPickle
-import os
+import sqlite3
+IMAGE_DB_FILE='images.sqlite'
 
-IMAGE_DB_FILE = 'images.db'
+import os
 
 images = {}
 
@@ -11,27 +11,45 @@ def initialize():
 
 def load():
     global images
-    if os.path.exists(IMAGE_DB_FILE):
-        fp = open(IMAGE_DB_FILE, 'rb')
-        images = cPickle.load(fp)
-        fp.close()
+    if not os.path.exists(IMAGE_DB_FILE):
+        print 'CREATING', IMAGE_DB_FILE
+        db = sqlite3.connect(IMAGE_DB_FILE)
+        db.execute('CREATE TABLE image_store (i INTEGER PRIMARY KEY, image BLOB)');
+        db.commit()
+        db.close()
 
-        print 'Loaded: %d images' % (len(images))
+    # connect to database
+    db = sqlite3.connect(IMAGE_DB_FILE)
 
-def save():
-    fp = open(IMAGE_DB_FILE, 'wb')
-    cPickle.dump(images, fp)
-    fp.close()
+    # configure to retrieve bytes, not text
+    db.text_factory = bytes
 
+    # get a query handle (or "cursor")
+    c = db.cursor()
+
+    # select all of the images
+    c.execute('SELECT i, image FROM image_store')
+    for i, image in c.fetchall():
+        images[i] = image
+    
 def add_image(data):
     if images:
         image_num = max(images.keys()) + 1
     else:
         image_num = 0
         
-    images[image_num] = data
+    # connect to the already existing database
+    db = sqlite3.connect(IMAGE_DB_FILE)
 
-    save()
+    # configure to allow binary insertions
+    db.text_factory = bytes
+
+    # insert!
+    db.execute('INSERT INTO image_store (i, image) VALUES (?, ?)',
+               (image_num, data,))
+    db.commit()
+
+    images[image_num] = data
     
     return image_num
 
