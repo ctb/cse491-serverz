@@ -12,8 +12,10 @@ from sys import stderr
 import time
 from urlparse import urlparse
 from wsgiref.validate import validator
+import threading
 
 def handle_connection(server_port, conn, port, app):
+    print 'handling a connection'
     request = conn.recv(1)
     
     if not request:
@@ -100,9 +102,14 @@ def main():
     s.listen(5)
     print 'Entering infinite loop; hit CTRL-C to exit'
     while True:
+        print 'Waiting for a connection'
         c, (client_host, client_port) = s.accept()
         print 'Got connection from', client_host, client_port
-        handle_connection(port, c, client_port, wsgi_app)
+
+        # see: https://docs.python.org/2/library/threading.html#thread-objects
+        t = threading.Thread(target=handle_connection,
+                             args=(port, c, client_port, wsgi_app))
+        t.start()
 
 if __name__ == '__main__':
     main()
