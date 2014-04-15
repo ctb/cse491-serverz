@@ -19,16 +19,20 @@ def is_complete_request(buffer):
 
     request, data = buffer.split('\r\n',1)
     headers = {}
-    for line in data.split('\r\n')[:-2]:
-        k, v = line.split(': ', 1)
-        headers[k.lower()] = v
 
-    if request.startswith('POST '):
-        content_length = headers['content-length']
-        content_length = int(content_length)
+    try:
+        for line in data.split('\r\n')[:-2]:
+            k, v = line.split(': ', 1)
+            headers[k.lower()] = v
 
-        if len(data) != content_length:
-            return False                # we didn't get everything!
+        if request.startswith('POST '):
+            content_length = headers['content-length']
+            content_length = int(content_length)
+
+            if len(data) != content_length:
+                return False                # we didn't get everything!
+    except:
+        return False
         
     return True
 
@@ -118,14 +122,16 @@ def main():
 
     active_sockets = []
     while 1:
+        #print len(active_sockets)
         try:
-            print 'Looking for connection...'
+            #print 'Looking for connection...'
             c, (client_host, client_port) = s.accept()
             print 'got connection!', client_host, client_port
             c.setblocking(0)
             active_sockets.append((c, ""))
         except socket.error:
-            print 'No connection; continuing on our merry way!'
+            #print 'No connection; continuing on our merry way!'
+            pass
 
         still_active_sockets = []
         for c, buffer in active_sockets:
@@ -133,15 +139,18 @@ def main():
                 data = c.recv(1024)
             except socket.error:
                 # no data; go to next socket
+                still_active_sockets.append((c, buffer))
                 continue
 
             # got some data! process.
-            print 'data!', data
             buffer += data
             if is_complete_request(buffer):
+                print 'complete request; handling'
                 handle_connection(port, buffer, wsgi_app, c)
             else:
                 still_active_sockets.append((c, buffer))
+                
+        active_sockets = still_active_sockets
 
 if __name__ == '__main__':
     main()
