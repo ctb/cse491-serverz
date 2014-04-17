@@ -31,12 +31,19 @@ def load():
     c.execute('SELECT i, image FROM image_store')
     for i, image in c.fetchall():
         images[i] = image
-    
+
+add_image_lock = threading.Lock()
 def add_image(data):
+    lock.acquire()
+    
     if images:
         image_num = max(images.keys()) + 1
     else:
         image_num = 0
+
+    images[image_num] = 'empty slot'
+
+    lock.release()
         
     # connect to the already existing database
     db = sqlite3.connect(IMAGE_DB_FILE)
